@@ -1,11 +1,15 @@
 const
   path                 = require('path'),
-  MiniCssExtractPlugin = require('mini-css-extract-plugin');
+  MiniCssExtractPlugin = require('mini-css-extract-plugin'),
+  VueLoaderPlugin      = require('vue-loader/lib/plugin');
 
 
 module.exports = {
   entry: {},
-  output: { filename: '[name].js' },
+  output: {
+    filename: '[name].js',
+    libraryTarget: 'umd',
+  },
   resolve: { modules: [ __dirname + '/../node_modules', __dirname + '/../src' ] },
   module: {
     rules: [
@@ -25,11 +29,16 @@ module.exports = {
       {
         test: /\.handlebars$/,
         loader: 'handlebars-loader'
-      }
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
     ]
   },
   plugins: [
-    new MiniCssExtractPlugin({ filename: '[name].css' })
+    new MiniCssExtractPlugin({ filename: '[name].css' }),
+    new VueLoaderPlugin(),
   ],
   stats: 'errors-only',
 };
