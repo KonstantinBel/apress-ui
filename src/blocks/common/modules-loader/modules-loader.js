@@ -17,12 +17,18 @@
     setTimeout(moduleLoader, 10);
   }
 
+  function _getWaitingList() {
+    const waitingList = [];
+
+    app.config.polyfillsLoaded && waitingList.push(app.config.polyfillsLoaded);
+    app.config.authIsComplete && waitingList.push(app.config.authIsComplete);
+
+    return waitingList;
+  }
+
   function _onWindowLoad() {
-    if (app.config.authIsComplete) {
-      app.config.authIsComplete.then(_loadMainModules.bind(null, 'load'));
-    } else {
-      _loadMainModules('load');
-    }
+    Promise.all(_getWaitingList())
+      .then(_loadMainModules.bind(null, 'load'));
   }
 
   function _listener() {
